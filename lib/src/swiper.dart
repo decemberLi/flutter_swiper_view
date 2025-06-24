@@ -30,6 +30,11 @@ enum SwiperLayout {
   CUSTOM,
 }
 
+enum AutoplayDirection {
+  forward,
+  backward,
+}
+
 class Swiper extends StatefulWidget {
   /// If set true , the pagination will display 'outer' of the 'content' container.
   final bool outer;
@@ -59,6 +64,9 @@ class Swiper extends StatefulWidget {
 
   ///auto play config
   final bool autoplay;
+
+  ///auto play direction
+  final AutoplayDirection autoplayDirection;
 
   ///Duration of the animation between transactions (in millisecond).
   final int autoplayDelay;
@@ -130,6 +138,7 @@ class Swiper extends StatefulWidget {
     this.transformer,
     required this.itemCount,
     bool autoplay = false,
+    this.autoplayDirection = AutoplayDirection.forward,
     this.layout = SwiperLayout.DEFAULT,
     this.autoplayDelay = kDefaultAutoplayDelayMs,
     this.autoplayDisableOnInteraction = true,
@@ -179,6 +188,7 @@ class Swiper extends StatefulWidget {
   factory Swiper.children({
     required List<Widget> children,
     bool autoplay = false,
+    AutoplayDirection autoplayDirection = AutoplayDirection.forward,
     PageTransformer? transformer,
     int autoplayDelay = kDefaultAutoplayDelayMs,
     bool autoplayDisableOnInteraction = true,
@@ -222,6 +232,7 @@ class Swiper extends StatefulWidget {
         outer: outer,
         scale: scale,
         autoplay: autoplay,
+        autoplayDirection: autoplayDirection,
         autoplayDelay: autoplayDelay,
         autoplayDisableOnInteraction: autoplayDisableOnInteraction,
         duration: duration,
@@ -250,6 +261,7 @@ class Swiper extends StatefulWidget {
     CustomLayoutOption? customLayoutOption,
     required SwiperDataBuilder<T> builder,
     bool autoplay = false,
+    AutoplayDirection autoplayDirection = AutoplayDirection.forward,
     int autoplayDelay = kDefaultAutoplayDelayMs,
     bool reverse = false,
     bool autoplayDisableOnInteraction = true,
@@ -292,6 +304,7 @@ class Swiper extends StatefulWidget {
         outer: outer,
         scale: scale,
         autoplay: autoplay,
+        autoplayDirection: autoplayDirection,
         autoplayDelay: autoplayDelay,
         autoplayDisableOnInteraction: autoplayDisableOnInteraction,
         duration: duration,
@@ -386,7 +399,14 @@ abstract class _SwiperTimerMixin extends State<Swiper> {
   }
 
   void _onTimer(Timer timer) {
-    _controller.next(animation: true);
+    switch (widget.autoplayDirection) {
+      case AutoplayDirection.forward:
+        _controller.next(animation: true);
+        break;
+      case AutoplayDirection.backward:
+        _controller.previous(animation: true);
+        break;
+    }
   }
 
   void _stopAutoplay() {

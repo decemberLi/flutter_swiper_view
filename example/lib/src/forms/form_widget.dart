@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class FormWidget extends StatelessWidget {
   final String label;
@@ -76,7 +76,7 @@ class _FormSelectState<T> extends State<FormSelect<T>> {
           _selectedIndex < 0 ? placeholder : values[_selectedIndex].toString()),
       onTap: () {
         _selectedIndex = 0;
-        showBottomSheet<dynamic>(
+        showModalBottomSheet<dynamic>(
             context: context,
             builder: (context) {
               return SizedBox(
